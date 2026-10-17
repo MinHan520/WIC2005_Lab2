@@ -1,0 +1,50 @@
+# page.yaml: the words on your page, kept as data like everything else.
+# make_page.py puts each answer under its question. A few sentences each, in your own words;
+# leave a blank line between paragraphs. Refer to YOUR network and YOUR evidence.
+# Never put your name or full student ID here: the page is public.
+
+repository: https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+
+answers:
+  planes:
+    question: "Where are the data, control and management planes in your network?"
+    answer: |
+      The data plane is in the Linux bridges (s1, s2, s3) that forward Ethernet frames between hosts based on MAC addresses they have learned.
+
+      The control plane is the MAC-learning process inside each bridge: when a frame arrives on a port, the bridge records that source MAC in its forwarding table. There is no separate controller; each switch learns on its own.
+
+      The management plane is the YAML topology file and the Python scripts (build_topo.py, make_page.py) that describe, create, and document the network. Changing the YAML changes the network.
+  learning:
+    question: "How did your switches learn which port leads to each host? Use your MAC table evidence."
+    answer: |
+      Each Linux bridge learns by inspecting the source MAC address of incoming frames. When h1 sends a frame to s1, s1 records h1's MAC on the port it arrived on. The evidence in macs.txt shows learned entries with 'is local' for the switch's own ports and numeric entries for remote hosts, each associated with a specific port number.
+
+      After running pingall every switch has a complete table, because every host has sent at least one frame.
+  kind:
+    question: "Which of the four kinds of programmability is this assignment (a network described as data, then built and documented by scripts)? Why isn't it any of the other three?"
+    answer: |
+      This is device provisioning or configuration management: the network is described as a data model (topology.yaml), and a script reads that model and creates the switches, hosts, and links automatically.
+
+      It is not protocol programmability (we did not change how ARP or ND works), not data-plane programmability (we did not write forwarding rules in P4 or OpenFlow), and not SDN with a remote controller (there is no controller; the switches learn MACs locally).
+  two_am:
+    question: "Week 1's 2 a.m. change on 40 switches: what would be different if those switches were described like your network?"
+    answer: |
+      If those 40 switches were described in a YAML file, the 2 a.m. change would mean editing the YAML once and running the build script. Every switch would get the same consistent change, there would be no risk of mistyping a command on switch 37, and git would record exactly what changed and when, making it easy to revert if something goes wrong.
+  model:
+    question: "What's the difference between your network's data model and its serialisation? Use YAML and JSON as the example."
+    answer: |
+      The data model is the abstract structure: a network has a student ID, a list of switches, a list of hosts with names and addresses, and a list of links. That structure is the same regardless of file format.
+
+      The serialisation is how that model is written to a file. YAML uses indentation and dashes; JSON uses braces and brackets. build_topo.py accepts both because load() detects the format and returns the same Python dictionary either way. The model is the meaning; the serialisation is the syntax.
+  check:
+    question: "Why is it better to catch bad data in check() than with pingall? What did IPv6 notice about a duplicate address that IPv4 didn't?"
+    answer: |
+      check() catches mistakes before the network is built, saving the time of starting Mininet, running pingall, and then debugging which host has the wrong address. It also gives clear error messages like 'Duplicate IPv4 address' rather than a silent ping failure.
+
+      In the duplicate-address experiment, IPv6 Duplicate Address Detection (DAD) marked the copied address as 'dadfailed' and refused to use it. IPv4 silently accepted the duplicate, so both hosts claimed the same IP with no warning. The evidence in dad.txt shows this difference clearly.
+  git:
+    question: "What does your Git history give you that copying files into folders named topology-v2-final wouldn't?"
+    answer: |
+      Git records every change with a timestamp, a message explaining why, and a diff showing exactly what changed. You can compare any two versions, revert a mistake to a known-good state, and branch to try something without risking the main copy.
+
+      Folders named topology-v2-final give you no diffs, no blame, no bisect, and no way to tell which 'final' is really final.

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network 5016: built from data</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.55; color: #1f2937; }
+  h1 { font-size: 1.6rem; margin-bottom: .2rem; } h2 { margin-top: 2.2rem; border-bottom: 1px solid #e5e7eb; }
+  table { border-collapse: collapse; width: 100%; font-size: .92rem; } th, td { border-bottom: 1px solid #e5e7eb; padding: .35rem .5rem; text-align: left; }
+  pre { background: #111827; color: #f3f4f6; padding: .8rem; border-radius: .4rem; overflow-x: auto; font-size: .82rem; }
+  pre.mermaid { background: none; color: inherit; } pre.missing { background: #fef2f2; color: #991b1b; }
+  .meta, .file { color: #6b7280; font-size: .85rem; } code { font-size: .88em; }
+</style>
+</head>
+<body>
+<h1>My network, built from data</h1>
+<p class="meta">Student ID ending 5016 · generated from <code>topology.yaml</code> by <code>make_page.py</code> on 2026-10-17</p>
+<p id="summary">3 switches, 6 hosts and 8 links, on IPv4 <code>10.16.0.0/16</code> and IPv6 <code>fd00:5016::/32</code>.
+The same file builds this network in Mininet and generates this page.</p>
+<p>Repository: <a id="repository" href="https://github.com/YOUR-USERNAME/YOUR-REPOSITORY">https://github.com/YOUR-USERNAME/YOUR-REPOSITORY</a></p>
+
+<h2>The network</h2>
+<section id="hosts"><table><thead><tr><th>Host</th><th>IPv4</th><th>IPv6</th><th>Switch</th></tr></thead><tbody><tr><td>h1</td><td><code>10.16.0.1/24</code></td><td><code>fd00:5016::1/64</code></td><td>s1</td></tr><tr><td>h2</td><td><code>10.16.0.2/24</code></td><td><code>fd00:5016::2/64</code></td><td>s1</td></tr><tr><td>h3</td><td><code>10.16.0.3/24</code></td><td><code>fd00:5016::3/64</code></td><td>s2</td></tr><tr><td>h4</td><td><code>10.16.0.4/24</code></td><td><code>fd00:5016::4/64</code></td><td>s2</td></tr><tr><td>h5</td><td><code>10.16.0.5/24</code></td><td><code>fd00:5016::5/64</code></td><td>s3</td></tr><tr><td>h6</td><td><code>10.16.0.6/24</code></td><td><code>fd00:5016::6/64</code></td><td>s3</td></tr></tbody></table></section>
+<h3>Links</h3>
+<section id="links"><ul><li>h1 &mdash; s1</li><li>h2 &mdash; s1</li><li>h3 &mdash; s2</li><li>h4 &mdash; s2</li><li>h5 &mdash; s3</li><li>h6 &mdash; s3</li><li>s1 &mdash; s2</li><li>s2 &mdash; s3</li></ul></section>
+<h3>Diagram</h3>
+<pre class="mermaid" id="diagram">graph LR
+  h1[&quot;h1&lt;br&gt;10.16.0.1&quot;] --- s1
+  h2[&quot;h2&lt;br&gt;10.16.0.2&quot;] --- s1
+  h3[&quot;h3&lt;br&gt;10.16.0.3&quot;] --- s2
+  h4[&quot;h4&lt;br&gt;10.16.0.4&quot;] --- s2
+  h5[&quot;h5&lt;br&gt;10.16.0.5&quot;] --- s3
+  h6[&quot;h6&lt;br&gt;10.16.0.6&quot;] --- s3
+  s1 --- s2
+  s2 --- s3</pre>
+
+<h2>Evidence from the running network</h2>
+<section id="evidence"><h3>pingall: every host reaches every other</h3>
+<p class="file">evidence/pingall.txt</p>
+<pre id="evidence-pingall">*** Ping: testing ping reachability
+h1 -&gt; h2 h3 h4 h5 h6 
+h2 -&gt; h1 h3 h4 h5 h6 
+h3 -&gt; h1 h2 h4 h5 h6 
+h4 -&gt; h1 h2 h3 h5 h6 
+h5 -&gt; h1 h2 h3 h4 h6 
+h6 -&gt; h1 h2 h3 h4 h5 
+*** Results: 0% dropped (30/30 received)</pre>
+<h3>h1&#x27;s neighbour table: ARP and Neighbour Discovery</h3>
+<p class="file">evidence/neigh.txt</p>
+<pre id="evidence-neigh">10.16.0.6 dev h1-eth0 lladdr 00:00:00:00:00:06 REACHABLE 
+10.16.0.4 dev h1-eth0 lladdr 00:00:00:00:00:04 REACHABLE 
+10.16.0.5 dev h1-eth0 lladdr 00:00:00:00:00:05 REACHABLE 
+10.16.0.2 dev h1-eth0 lladdr 00:00:00:00:00:02 REACHABLE 
+10.16.0.3 dev h1-eth0 lladdr 00:00:00:00:00:03 REACHABLE 
+fd00:5016::2 dev h1-eth0 lladdr 00:00:00:00:00:02 REACHABLE 
+fe80::200:ff:fe00:2 dev h1-eth0 lladdr 00:00:00:00:00:02 REACHABLE</pre>
+<h3>What a switch&#x27;s data plane learned: brctl showmacs</h3>
+<p class="file">evidence/macs.txt</p>
+<pre id="evidence-macs">port no	mac addr		is local?	ageing timer
+  1	00:00:00:00:00:01	no		  10.03
+  2	00:00:00:00:00:02	no		  10.03
+  3	00:00:00:00:00:03	no		   2.35
+  3	00:00:00:00:00:04	no		   5.42
+  3	00:00:00:00:00:05	no		   9.01
+  3	00:00:00:00:00:06	no		  36.14
+  3	22:19:78:fa:7d:58	no		  33.58
+  3	2e:80:23:9e:7a:02	no		  13.61
+  3	3e:06:88:82:6d:3a	no		   9.52
+  1	6e:5f:95:51:8b:a9	yes		   0.00
+  1	6e:5f:95:51:8b:a9	yes		   0.00
+  3	b6:99:21:ed:55:66	yes		   0.00
+  3	b6:99:21:ed:55:66	yes		   0.00
+  3	f6:03:a9:65:b2:ec	no		   2.35
+  2	fe:ce:06:49:99:fe	yes		   0.00
+  2	fe:ce:06:49:99:fe	yes		   0.00</pre>
+<h3>A duplicate address: IPv6 notices, IPv4 doesn&#x27;t</h3>
+<p class="file">evidence/dad.txt</p>
+<pre id="evidence-dad">11: h2-eth0@if13: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000 link-netnsid 0
+    inet6 fd00:5016::1/64 scope global dadfailed tentative 
+       valid_lft forever preferred_lft forever
+    inet6 fd00:5016::2/64 scope global 
+       valid_lft forever preferred_lft forever
+    inet6 fe80::200:ff:fe00:2/64 scope link 
+       valid_lft forever preferred_lft forever
+11: h2-eth0@if13: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000 link-netnsid 0
+    inet 10.16.0.2/24 brd 10.16.0.255 scope global h2-eth0
+       valid_lft forever preferred_lft forever
+    inet 10.16.0.1/24 scope global secondary h2-eth0
+       valid_lft forever preferred_lft forever</pre>
+<h3>check() stopping bad data before it&#x27;s built</h3>
+<p class="file">evidence/check.txt</p>
+<pre id="evidence-check">PROBLEM: Duplicate IPv4 address 10.16.0.1 on h1 and h2
+PROBLEM: Duplicate IPv6 address fd00:5016::1 on h1 and h2
+PROBLEM: Link references &#x27;s9&#x27; which does not exist
+Fix the description and try again.</pre></section>
+
+<h2>What I learned</h2>
+<section id="answers"><section id="answer-planes"><h3>Where are the data, control and management planes in your network?</h3><p>The data plane is in the Linux bridges (s1, s2, s3) that forward Ethernet frames between hosts based on MAC addresses they have learned.</p><p>The control plane is the MAC-learning process inside each bridge: when a frame arrives on a port, the bridge records that source MAC in its forwarding table. There is no separate controller; each switch learns on its own.</p><p>The management plane is the YAML topology file and the Python scripts (build_topo.py, make_page.py) that describe, create, and document the network. Changing the YAML changes the network.</p></section>
+<section id="answer-learning"><h3>How did your switches learn which port leads to each host? Use your MAC table evidence.</h3><p>Each Linux bridge learns by inspecting the source MAC address of incoming frames. When h1 sends a frame to s1, s1 records h1&#x27;s MAC on the port it arrived on. The evidence in macs.txt shows learned entries with &#x27;is local&#x27; for the switch&#x27;s own ports and numeric entries for remote hosts, each associated with a specific port number.</p><p>After running pingall every switch has a complete table, because every host has sent at least one frame.</p></section>
+<section id="answer-kind"><h3>Which of the four kinds of programmability is this assignment (a network described as data, then built and documented by scripts)? Why isn&#x27;t it any of the other three?</h3><p>This is device provisioning or configuration management: the network is described as a data model (topology.yaml), and a script reads that model and creates the switches, hosts, and links automatically.</p><p>It is not protocol programmability (we did not change how ARP or ND works), not data-plane programmability (we did not write forwarding rules in P4 or OpenFlow), and not SDN with a remote controller (there is no controller; the switches learn MACs locally).</p></section>
+<section id="answer-two_am"><h3>Week 1&#x27;s 2 a.m. change on 40 switches: what would be different if those switches were described like your network?</h3><p>If those 40 switches were described in a YAML file, the 2 a.m. change would mean editing the YAML once and running the build script. Every switch would get the same consistent change, there would be no risk of mistyping a command on switch 37, and git would record exactly what changed and when, making it easy to revert if something goes wrong.</p></section>
+<section id="answer-model"><h3>What&#x27;s the difference between your network&#x27;s data model and its serialisation? Use YAML and JSON as the example.</h3><p>The data model is the abstract structure: a network has a student ID, a list of switches, a list of hosts with names and addresses, and a list of links. That structure is the same regardless of file format.</p><p>The serialisation is how that model is written to a file. YAML uses indentation and dashes; JSON uses braces and brackets. build_topo.py accepts both because load() detects the format and returns the same Python dictionary either way. The model is the meaning; the serialisation is the syntax.</p></section>
+<section id="answer-check"><h3>Why is it better to catch bad data in check() than with pingall? What did IPv6 notice about a duplicate address that IPv4 didn&#x27;t?</h3><p>check() catches mistakes before the network is built, saving the time of starting Mininet, running pingall, and then debugging which host has the wrong address. It also gives clear error messages like &#x27;Duplicate IPv4 address&#x27; rather than a silent ping failure.</p><p>In the duplicate-address experiment, IPv6 Duplicate Address Detection (DAD) marked the copied address as &#x27;dadfailed&#x27; and refused to use it. IPv4 silently accepted the duplicate, so both hosts claimed the same IP with no warning. The evidence in dad.txt shows this difference clearly.</p></section>
+<section id="answer-git"><h3>What does your Git history give you that copying files into folders named topology-v2-final wouldn&#x27;t?</h3><p>Git records every change with a timestamp, a message explaining why, and a diff showing exactly what changed. You can compare any two versions, revert a mistake to a known-good state, and branch to try something without risking the main copy.</p><p>Folders named topology-v2-final give you no diffs, no blame, no bisect, and no way to tell which &#x27;final&#x27; is really final.</p></section></section>
+
+<script type="application/json" id="topology-data">{
+  "student_id_last4": "5016",
+  "switches": [
+    "s1",
+    "s2",
+    "s3"
+  ],
+  "hosts": [
+    {
+      "name": "h1",
+      "ip": "10.16.0.1/24",
+      "ipv6": "fd00:5016::1/64"
+    },
+    {
+      "name": "h2",
+      "ip": "10.16.0.2/24",
+      "ipv6": "fd00:5016::2/64"
+    },
+    {
+      "name": "h3",
+      "ip": "10.16.0.3/24",
+      "ipv6": "fd00:5016::3/64"
+    },
+    {
+      "name": "h4",
+      "ip": "10.16.0.4/24",
+      "ipv6": "fd00:5016::4/64"
+    },
+    {
+      "name": "h5",
+      "ip": "10.16.0.5/24",
+      "ipv6": "fd00:5016::5/64"
+    },
+    {
+      "name": "h6",
+      "ip": "10.16.0.6/24",
+      "ipv6": "fd00:5016::6/64"
+    }
+  ],
+  "links": [
+    [
+      "h1",
+      "s1"
+    ],
+    [
+      "h2",
+      "s1"
+    ],
+    [
+      "h3",
+      "s2"
+    ],
+    [
+      "h4",
+      "s2"
+    ],
+    [
+      "h5",
+      "s3"
+    ],
+    [
+      "h6",
+      "s3"
+    ],
+    [
+      "s1",
+      "s2"
+    ],
+    [
+      "s2",
+      "s3"
+    ]
+  ]
+}</script>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true });
+</script>
+</body>
+</html>
