@@ -1,0 +1,4 @@
+PROBLEM: Duplicate IPv4 address 10.16.0.1 on h1 and h2
+PROBLEM: Duplicate IPv6 address fd00:5016::1 on h1 and h2
+PROBLEM: Link references 's9' which does not exist
+Fix the description and try again.
