@@ -1,0 +1,47 @@
+# topology.yaml - a network described as data.
+# build_topo.py reads this file and creates exactly this network in Mininet.
+#
+# Make it yours first (see "Your addresses" in the lab):
+#   NNNN = 5016
+#   NN   = 16
+# Replace every NNNN and NN below. Don't put your full student ID here: this file
+# goes in your repository, which may be public.
+
+student_id_last4: "5016"
+
+switches:
+  - s1
+  - s2
+  - s3
+
+hosts:
+  - name: h1
+    ip: 10.16.0.1/24
+    ipv6: fd00:5016::1/64
+  - name: h2
+    ip: 10.16.0.2/24
+    ipv6: fd00:5016::2/64
+  - name: h3
+    ip: 10.16.0.3/24
+    ipv6: fd00:5016::3/64
+  - name: h4
+    ip: 10.16.0.4/24
+    ipv6: fd00:5016::4/64
+  - name: h5
+    ip: 10.16.0.5/24
+    ipv6: fd00:5016::5/64
+  - name: h6
+    ip: 10.16.0.6/24
+    ipv6: fd00:5016::6/64
+
+# Each link joins two nodes.
+# h1, h2 on s1; h3, h4 on s2; h5, h6 on s3; switches chained s1-s2-s3
+links:
+  - [h1, s1]
+  - [h2, s1]
+  - [h3, s2]
+  - [h4, s2]
+  - [h5, s3]
+  - [h6, s3]
+  - [s1, s2]
+  - [s2, s3]
